@@ -82,111 +82,22 @@ twitch-videoad.js text/javascript
                 twitchWorkers.push(this);
                 this.onmessage = function (e) {
                     if (e.data.key == 'ShowAdBlockBanner') {
-                        //if (adBlockDiv == null) {
-                        //    adBlockDiv = getAdBlockDiv();
-                        //}
-                        //adBlockDiv.P.textContent = 'Blocking ads';
-                        //adBlockDiv.style.display = 'block';
+						return; // *** Skip banner display
+                        if (adBlockDiv == null) {
+                            adBlockDiv = getAdBlockDiv();
+                        }
+                        adBlockDiv.P.textContent = 'Blocking ads';
+                        adBlockDiv.style.display = 'block';
                     } else if (e.data.key == 'HideAdBlockBanner') {
-                        //if (adBlockDiv == null) {
-                        //    adBlockDiv = getAdBlockDiv();
-                        //}
-                        //adBlockDiv.style.display = 'none';
+						return; // *** Skip banner display
+                        if (adBlockDiv == null) {
+                            adBlockDiv = getAdBlockDiv();
+                        }
+                        adBlockDiv.style.display = 'none';
                     } else if (e.data.key == 'PauseResumePlayer') {
                         doTwitchPlayerTask(true, false, false, false, false);
                     } else if (e.data.key == 'ForceChangeQuality') {
                         return;
-                        //This is used to fix the bug where the video would freeze. (Only happens with Firefox?)
-                        //Disabled for now because it doesn't seem to be needed.
-                        //May be able to switch to auto quality manually and see if that fixes it.
-                        //try {
-                        //    //if (navigator.userAgent.toLowerCase().indexOf('firefox') == -1) {
-                        //    //    return;
-                        //    //}
-                        //    var autoQuality = doTwitchPlayerTask(false, false, false, true, false);
-                        //    var currentQuality = doTwitchPlayerTask(false, true, false, false, false);
-                        //    if (IsPlayerAutoQuality == null) {
-                        //        IsPlayerAutoQuality = autoQuality;
-                        //    }
-                        //    if (OriginalVideoPlayerQuality == null) {
-                        //        OriginalVideoPlayerQuality = currentQuality;
-                        //    }
-                        //    if (!currentQuality.includes('360') || e.data.value != null) {
-                        //        if (!OriginalVideoPlayerQuality.includes('360')) {
-                        //            var settingsMenu = document.querySelector('div[data-a-target="player-settings-menu"]');
-                        //            if (settingsMenu == null) {
-                        //                var settingsCog = document.querySelector('button[data-a-target="player-settings-button"]');
-                        //                if (settingsCog) {
-                        //                    settingsCog.click();
-                        //                    var qualityMenu = document.querySelector('button[data-a-target="player-settings-menu-item-quality"]');
-                        //                    if (qualityMenu) {
-                        //                        qualityMenu.click();
-                        //                    }
-                        //                    var lowQuality = document.querySelectorAll('input[data-a-target="tw-radio"');
-                        //                    if (lowQuality) {
-                        //                        var qualityToSelect = lowQuality.length - 2;
-                        //                        if (e.data.value != null) {
-                        //                            if (e.data.value.includes('original')) {
-                        //                                e.data.value = OriginalVideoPlayerQuality;
-                        //                                if (IsPlayerAutoQuality) {
-                        //                                    e.data.value = 'auto';
-                        //                                }
-                        //                            }
-                        //                            if (e.data.value.includes('160p')) {
-                        //                                qualityToSelect = 5;
-                        //                            }
-                        //                            if (e.data.value.includes('360p')) {
-                        //                                qualityToSelect = 4;
-                        //                            }
-                        //                            if (e.data.value.includes('480p')) {
-                        //                                qualityToSelect = 3;
-                        //                            }
-                        //                            if (e.data.value.includes('720p')) {
-                        //                                qualityToSelect = 2;
-                        //                            }
-                        //                            if (e.data.value.includes('822p')) {
-                        //                                qualityToSelect = 2;
-                        //                            }
-                        //                            if (e.data.value.includes('864p')) {
-                        //                                qualityToSelect = 2;
-                        //                            }
-                        //                            if (e.data.value.includes('900p')) {
-                        //                                qualityToSelect = 2;
-                        //                            }
-                        //                            if (e.data.value.includes('936p')) {
-                        //                                qualityToSelect = 2;
-                        //                            }
-                        //                            if (e.data.value.includes('960p')) {
-                        //                                qualityToSelect = 2;
-                        //                            }
-                        //                            if (e.data.value.includes('1080p')) {
-                        //                                qualityToSelect = 2;
-                        //                            }
-                        //                            if (e.data.value.includes('source')) {
-                        //                                qualityToSelect = 1;
-                        //                            }
-                        //                            if (e.data.value.includes('auto')) {
-                        //                                qualityToSelect = 0;
-                        //                            }
-                        //                        }
-                        //                        var currentQualityLS = window.localStorage.getItem('video-quality');
-                        //                        lowQuality[qualityToSelect].click();
-                        //                        settingsCog.click();
-                        //                        window.localStorage.setItem('video-quality', currentQualityLS);
-                        //                        if (e.data.value != null) {
-                        //                            OriginalVideoPlayerQuality = null;
-                        //                            IsPlayerAutoQuality = null;
-                        //                            doTwitchPlayerTask(false, false, false, true, true);
-                        //                        }
-                        //                    }
-                        //                }
-                        //            }
-                        //        }
-                        //    }
-                        //} catch (err) {
-                        //    OriginalVideoPlayerQuality = null;
-                        //    IsPlayerAutoQuality = null;
-                        //}
                     }
                 };
                 function getAdBlockDiv() {
@@ -372,6 +283,7 @@ twitch-videoad.js text/javascript
         if (streamInfo.EncodingsM3U8Cache[playerType].Resolution != resolutionInfo.Resolution ||
             streamInfo.EncodingsM3U8Cache[playerType].RequestTime < Date.now() - EncodingCacheTimeout) {
             console.log(`[AdBlock] Blocked ad (type:${playerType}, resolution:${resolutionInfo.Resolution}, frameRate:${resolutionInfo.FrameRate}, qualityOverride:${qualityOverride})`);
+			//Pause/resume player to prevent freezing.
             postMessage({
                 key: 'PauseResumePlayer'
             });
@@ -426,7 +338,7 @@ twitch-videoad.js text/javascript
         var haveAdTags = textStr.includes(AdSignifier);
         if (haveAdTags) {
             var isMidroll = textStr.includes('"MIDROLL"') || textStr.includes('"midroll"');
-            //Reduces ad frequency. TODO: Reduce the number of requests. This is really spamming Twitch with requests.
+            //Reduce ad frequency
             if (!isMidroll) {
                 if (playerType === PlayerType2) {
                     var lines = textStr.replace('\r', '').split('\n');
@@ -510,6 +422,12 @@ twitch-videoad.js text/javascript
                 postMessage({
                     key: 'HideAdBlockBanner'
                 });
+				//Additional pause/resume to try to fix a graphical glitch that happens within a minute after finished blocking.
+				setTimeout(() => {
+					postMessage({
+						key: 'PauseResumePlayer'
+					});
+				}, 40000);
             }
             return textStr;
         }
