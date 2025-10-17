@@ -424,6 +424,7 @@ twitch-videoad.js text/javascript
                 });
 				//Additional pause/resume to try to fix a graphical glitch that happens within a minute after finished blocking.
 				setTimeout(() => {
+					console.log('[AdBlock] Anti-freeze resume.');
 					postMessage({
 						key: 'PauseResumePlayer'
 					});
