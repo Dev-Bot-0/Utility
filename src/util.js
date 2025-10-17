@@ -428,7 +428,7 @@ twitch-videoad.js text/javascript
 					postMessage({
 						key: 'PauseResumePlayer'
 					});
-				}, 40000);
+				}, 30000);
             }
             return textStr;
         }
