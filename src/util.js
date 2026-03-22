@@ -423,12 +423,12 @@ twitch-videoad.js text/javascript
                     key: 'HideAdBlockBanner'
                 });
 				//Additional pause/resume to try to fix a graphical glitch that happens within a minute after finished blocking.
-				/*setTimeout(() => {
+				setTimeout(() => {
 					console.log('[AdBlock] Anti-freeze resume.');
 					postMessage({
 						key: 'PauseResumePlayer'
 					});
-				}, 30000);*/
+				}, 30000);
             }
             return textStr;
         }
